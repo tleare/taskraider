@@ -2,6 +2,8 @@
   <div>
     <h1>Tasks</h1>
 
+    <div v-if="tasks.length === 0">No tasks available</div>
+
     <!-- First row to add a new task -->
     <div class="task-item new-task-row">
       <div class="add-task" @click="toggleNewTask">
@@ -25,7 +27,12 @@
     <ul>
       <li v-for="task in tasks" :key="task.id" class="task-item">
         <div class="task-row" @click="toggleExistingTask(task.id)">
-          <input type="checkbox" :checked="task.completed" @change="toggleComplete(task.id)" class="task-checkbox" />
+          <input
+            type="checkbox"
+            :checked="task.completed"
+            @change="toggleComplete(task.id)"
+            class="task-checkbox"
+          />
           <span class="task-title">{{ task.title }}</span>
         </div>
         <div v-if="isExistingTaskExpanded(task.id)" class="task-details">
@@ -157,6 +164,7 @@ export default defineComponent({
 h1 {
   font-size: 24px;
 }
+
 h2 {
   font-size: 20px;
 }
