@@ -25,7 +25,7 @@
 
     <!-- List of tasks -->
     <ul>
-      <li v-for="task in tasks" :key="task.id" class="task-item">
+      <li v-for="task in tasks" :key="task.id" class="task-item" :class="{ completed: task.completed }">
         <div class="task-row" @click="toggleExistingTask(task.id)">
           <input
             type="checkbox"
