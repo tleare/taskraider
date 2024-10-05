@@ -18,7 +18,6 @@ class Migration(migrations.Migration):
                 ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
                 ('title', models.CharField(max_length=255)),
                 ('description', models.TextField()),
-                ('task_type', models.CharField(choices=[('TODO', 'To-Do'), ('DAILY', 'Daily'), ('HABIT', 'Habit')], default='HABIT', max_length=5)),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('due_date', models.DateTimeField()),
                 ('completed', models.BooleanField(default=False)),

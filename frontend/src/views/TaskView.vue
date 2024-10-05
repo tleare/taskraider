@@ -15,12 +15,6 @@
           class="editable-field"
           placeholder="Description"
         ></textarea>
-        <label>Type:</label>
-        <select v-model="newTask.task_type" class="editable-field">
-          <option value="TODO">To-Do</option>
-          <option value="DAILY">Daily</option>
-          <option value="HABIT">Habit</option>
-        </select>
         <label>Due Date:</label>
         <input type="date" v-model="newTask.due_date" class="editable-field" />
         <button @click="addTask">Add Task</button>
@@ -53,14 +47,6 @@
             ></textarea>
           </div>
           <div>
-            <label>Type:</label>
-            <select v-model="task.task_type" @blur="saveTask(task.id)" class="editable-field">
-              <option value="TODO">To-Do</option>
-              <option value="DAILY">Daily</option>
-              <option value="HABIT">Habit</option>
-            </select>
-          </div>
-          <div>
             <label>Due Date:</label>
             <input
               type="date"
@@ -87,7 +73,6 @@ export default defineComponent({
     const newTask = ref({
       title: '',
       description: '',
-      task_type: 'TODO',
       due_date: new Date().toISOString().split('T')[0]
     })
     const isNewTaskExpanded = ref(false)
@@ -138,7 +123,6 @@ export default defineComponent({
         newTask.value = {
           title: '',
           description: '',
-          task_type: 'TODO',
           due_date: new Date().toISOString().split('T')[0]
         }
         isNewTaskExpanded.value = false // Collapse the new task input
