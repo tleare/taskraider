@@ -19,7 +19,7 @@
         ></textarea>
         <label>Due Date:</label>
         <input type="datetime-local" v-model="newTask.due_date" class="editable-field" />
-        <button @click="addTask">Add Task</button>
+        <button @click="addNewTask">Add Task</button>
       </div>
     </div>
 
@@ -65,8 +65,7 @@
 
 <script lang="ts">
 import { defineComponent, ref, onMounted } from 'vue'
-import api from '@/api.ts'
-import {completeTask } from '@/api'
+import { addTask, completeTask, fetchTasks, updateTask } from '@/api'
 import type { Task } from '@/models/Task'
 
 export default defineComponent({
@@ -78,15 +77,13 @@ export default defineComponent({
       description: '',
       due_date: new Date().toISOString().split('T')[0]
     })
-    const isNewTaskExpanded = ref(false)
 
-    const fetchTasks = async () => {
-      try {
-        const response = await api.get<Task[]>('tasks/')
-        tasks.value = response.data
-      } catch (error) {
-        console.error('Error fetching tasks:', error)
-      }
+    const loadTasks = async () => {
+      tasks.value = await fetchTasks()
+    }
+
+    const toggleNewTask = () => {
+      isNewTaskExpanded.value = !isNewTaskExpanded.value
     }
 
     const toggleExistingTask = (taskId: string) => {
@@ -97,40 +94,33 @@ export default defineComponent({
       }
     }
 
-    const toggleNewTask = () => {
-      isNewTaskExpanded.value = !isNewTaskExpanded.value
-    }
+    const isNewTaskExpanded = ref(false)
 
     const isExistingTaskExpanded = (taskId: string) => {
       return expandedTaskIds.value.has(taskId)
     }
 
-    const saveTask = async (taskId: string) => {
-      const task = tasks.value.find((t) => t.id === taskId)
-      if (task) {
-        try {
-          await api.put(`${taskId}/`, task)
-          console.log('Task updated successfully')
-        } catch (error) {
-          console.error('Error updating task:', error)
-        }
-      }
-    }
-
-    const addTask = async () => {
+    const addNewTask = async (): Promise<void> => {
       if (!newTask.value.title) return // Prevent adding empty tasks
       try {
-        const response = await api.post('tasks/', newTask.value)
-        tasks.value.push(response.data) // Add the newly created task to the list
+        const addedTask = await addTask(newTask.value)
+        tasks.value.push(addedTask) // Add the newly created task to the list
         // Reset new task input fields
         newTask.value = {
           title: '',
           description: '',
           due_date: new Date().toISOString().split('T')[0]
         }
-        isNewTaskExpanded.value = false // Collapse the new task input
+        isNewTaskExpanded.value = false
       } catch (error) {
         console.error('Error adding task:', error)
+      }
+    }
+
+    const saveTask = async (taskId: string) => {
+      const task = tasks.value.find((t) => t.id === taskId)
+      if (task) {
+        await updateTask(task)
       }
     }
 
@@ -142,11 +132,11 @@ export default defineComponent({
     }
 
     onMounted(() => {
-      fetchTasks()
+      loadTasks()
     })
 
     return {
-      addTask,
+      addNewTask,
       newTask,
       isExistingTaskExpanded,
       isNewTaskExpanded,
