@@ -18,7 +18,7 @@
           placeholder="Description"
         ></textarea>
         <label>Due Date:</label>
-        <input type="date" v-model="newTask.due_date" class="editable-field" />
+        <input type="datetime-local" v-model="newTask.due_date" class="editable-field" />
         <button @click="addTask">Add Task</button>
       </div>
     </div>
@@ -51,7 +51,7 @@
           <div>
             <label>Due Date:</label>
             <input
-              type="date"
+              type="datetime-local"
               v-model="task.due_date"
               @blur="saveTask(task.id)"
               class="editable-field"

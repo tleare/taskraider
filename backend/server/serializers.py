@@ -1,8 +1,9 @@
-from rest_framework.serializers import ModelSerializer, SerializerMethodField
+from rest_framework.serializers import ModelSerializer, SerializerMethodField, DateTimeField
 from .models import Task, TaskCompletion
 
 
 class TaskSerializer(ModelSerializer):
+    due_date = DateTimeField(format='%Y-%m-%dT%H:%M')
     completed = SerializerMethodField()
     class Meta:
         model = Task
