@@ -20,10 +20,17 @@ class Migration(migrations.Migration):
                 ('description', models.TextField()),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('due_date', models.DateTimeField()),
-                ('completed', models.BooleanField(default=False)),
             ],
             options={
                 'ordering': ('title',),
             },
+        ),
+        migrations.CreateModel(
+            name='TaskCompletion',
+            fields=[
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('completed_at', models.DateTimeField(auto_now_add=True)),
+                ('task', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='server.task')),
+            ],
         ),
     ]

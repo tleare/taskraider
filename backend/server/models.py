@@ -9,10 +9,10 @@ class Task(models.Model):
     description = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     due_date = models.DateTimeField()
-    completed = models.BooleanField(default=False)
 
     class Meta:
         ordering = ('title',)
 
-    def __str__(self):
-        return self.title
+class TaskCompletion(models.Model):
+    task = models.ForeignKey(Task, on_delete=models.CASCADE)
+    completed_at = models.DateTimeField(auto_now_add=True)

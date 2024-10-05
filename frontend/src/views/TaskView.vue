@@ -25,12 +25,7 @@
     <ul>
       <li v-for="task in tasks" :key="task.id" class="task-item">
         <div class="task-row" @click="toggleExistingTask(task.id)">
-          <input
-            type="checkbox"
-            v-model="task.completed"
-            @change="saveTask(task.id)"
-            class="task-checkbox"
-          />
+          <input type="checkbox" :checked="task.completed" @change="toggleComplete(task.id)" class="task-checkbox" />
           <span class="task-title">{{ task.title }}</span>
         </div>
         <div v-if="isExistingTaskExpanded(task.id)" class="task-details">
@@ -64,7 +59,8 @@
 <script lang="ts">
 import { defineComponent, ref, onMounted } from 'vue'
 import api from '@/api.ts'
-import { Task } from '@/models/Task'
+import {completeTask } from '@/api'
+import type { Task } from '@/models/Task'
 
 export default defineComponent({
   setup() {
@@ -131,6 +127,13 @@ export default defineComponent({
       }
     }
 
+    const toggleComplete = async (taskId: string) => {
+      const task = tasks.value.find((t) => t.id === taskId)
+      if (task) {
+        await completeTask(task)
+      }
+    }
+
     onMounted(() => {
       fetchTasks()
     })
@@ -142,6 +145,7 @@ export default defineComponent({
       isNewTaskExpanded,
       saveTask,
       tasks,
+      toggleComplete,
       toggleExistingTask,
       toggleNewTask
     }
